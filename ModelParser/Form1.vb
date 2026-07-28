@@ -255,7 +255,14 @@ Public Class Form1
                         If Not String.IsNullOrEmpty(refPedido) Then
                             ordenActual = New OrdenCompra()
                             ordenActual.ClaveOrden = refPedido
-                            ordenActual.Proveedor = currentRow(1).ToString()
+                            ordenActual.Proveedor = currentRow(1).ToString().Trim()
+                            
+                            If String.IsNullOrWhiteSpace(ordenActual.Proveedor) Then
+                                MsgBox("Advertencia: La orden de compra " & refPedido & " no tiene Proveedor. Se detendrá el proceso de importación.")
+                                iniciarmodelo()
+                                Exit Sub
+                            End If
+                            
                             ordenActual.Fecha = currentRow(2).ToString()
                             ordenActual.Moneda = currentRow(3).ToString()
                             ordenActual.Observaciones = currentRow(4).ToString()
