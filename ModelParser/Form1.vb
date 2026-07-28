@@ -28,7 +28,7 @@ Public Class Form1
     Dim ListaOrdenes As New List(Of OrdenCompra)
     
     Friend WithEvents ComboBoxOrdenes As ComboBox
-    Friend WithEvents ButtonGuardarTodas As Button
+    Friend WithEvents LabelCombo As Label
     
     'copiar al portapapeles
     Private Sub copiar(ByVal file As String)
@@ -57,6 +57,13 @@ Public Class Form1
         Label8.Text = "Observaciones"
         Label9.Text = "Archivo"
         Label10.Text = "Destino"
+        Button2.Text = "Guardar Modelo"
+        
+        If ComboBoxOrdenes IsNot Nothing Then
+            ComboBoxOrdenes.Items.Clear()
+            ComboBoxOrdenes.Visible = False
+            LabelCombo.Visible = False
+        End If
     End Sub
     
     Private Sub MostrarOrden(orden As OrdenCompra)
@@ -68,7 +75,7 @@ Public Class Form1
         Label6.Text = "Almacen: 1"
         Label7.Text = "Solicitante: " & orden.Solicitante
         Label8.Text = "Observaciones: " & orden.Observaciones
-        Label10.Text = "Guardar como: " & orden.ClaveOrden
+        Label10.Text = "Destino: " & orden.ClaveOrden & ".mod"
         claveorden = orden.ClaveOrden
         
         RichTextBox1.Text = GenerarXML(orden)
@@ -280,32 +287,22 @@ Public Class Form1
             For Each o In ListaOrdenes
                 ComboBoxOrdenes.Items.Add(o.ClaveOrden)
             Next
+            
+            ComboBoxOrdenes.Visible = True
+            LabelCombo.Visible = True
             ComboBoxOrdenes.SelectedIndex = 0
-            MsgBox("Se encontraron " & ListaOrdenes.Count & " órdenes en el archivo.")
+            
+            If ListaOrdenes.Count = 1 Then
+                Button2.Text = "Guardar Orden"
+            Else
+                Button2.Text = "Guardar Todas (" & ListaOrdenes.Count & ")"
+            End If
         End If
     End Sub
 
     Private Sub ComboBoxOrdenes_SelectedIndexChanged(sender As Object, e As EventArgs)
         If ComboBoxOrdenes.SelectedIndex >= 0 Then
             MostrarOrden(ListaOrdenes(ComboBoxOrdenes.SelectedIndex))
-        End If
-    End Sub
-    
-    Private Sub ButtonGuardarTodas_Click(sender As Object, e As EventArgs)
-        If ListaOrdenes.Count = 0 Then
-            MsgBox("No hay órdenes cargadas.")
-            Exit Sub
-        End If
-        
-        If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
-            Dim folder As String = FolderBrowserDialog1.SelectedPath
-            For Each orden In ListaOrdenes
-                Dim model As String = folder & "\" & Trim(orden.ClaveOrden.ToUpper()) & ".mod"
-                Dim sw As New StreamWriter(model)
-                sw.Write(GenerarXML(orden))
-                sw.Close()
-            Next
-            MsgBox("Se guardaron " & ListaOrdenes.Count & " archivos .mod correctamente en: " & folder)
         End If
     End Sub
 
@@ -325,46 +322,65 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Agregar selector de ordenes a GroupBox2 de forma ordenada
+        LabelCombo = New Label()
+        LabelCombo.Text = "Seleccionar Previa:"
+        LabelCombo.Location = New Point(320, 30)
+        LabelCombo.AutoSize = True
+        LabelCombo.Visible = False
+        GroupBox2.Controls.Add(LabelCombo)
+        
         ComboBoxOrdenes = New ComboBox()
         ComboBoxOrdenes.DropDownStyle = ComboBoxStyle.DropDownList
-        ComboBoxOrdenes.Dock = DockStyle.Top
-        GroupBox1.Controls.Add(ComboBoxOrdenes)
+        ComboBoxOrdenes.Location = New Point(440, 27)
+        ComboBoxOrdenes.Size = New Size(200, 23)
+        ComboBoxOrdenes.Visible = False
+        GroupBox2.Controls.Add(ComboBoxOrdenes)
         AddHandler ComboBoxOrdenes.SelectedIndexChanged, AddressOf ComboBoxOrdenes_SelectedIndexChanged
-        
-        ButtonGuardarTodas = New Button()
-        ButtonGuardarTodas.Text = "Guardar Todas"
-        ButtonGuardarTodas.Dock = DockStyle.Top
-        GroupBox1.Controls.Add(ButtonGuardarTodas)
-        AddHandler ButtonGuardarTodas.Click, AddressOf ButtonGuardarTodas_Click
 
         iniciarmodelo()
     End Sub
     
-    'guardar modelo
-    Private Sub guardarmodelo(ByVal modelo As String)
-        Dim sw As New StreamWriter(modelo)
-        sw.Write(RichTextBox1.Text)
-        sw.Close()
-        If CheckBox1.Checked = False Then
-            If MsgBox("Quieres abrir el archivo guardado?", MsgBoxStyle.YesNo, "Modelo Guardado") = MsgBoxResult.Yes Then
-                Try
-                    Process.Start("notepad.exe", modelo)
-                Catch ex As Exception
-                    MsgBox(ex.Message.ToString())
-                End Try
-            End If
-            copiar(modelo)
-        End If
-    End Sub
-
+    'guardar modelo (unificado)
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        SaveFileDialog1.Filter = "TextFile (*.mod)|*.mod"
-        If Not claveorden Is Nothing Then
-            SaveFileDialog1.FileName = Trim(claveorden.ToUpper)
+        If ListaOrdenes.Count = 0 Then
+            MsgBox("No hay órdenes cargadas.")
+            Exit Sub
         End If
-        If SaveFileDialog1.ShowDialog = DialogResult.OK Then
-            Dim modelo As String = SaveFileDialog1.FileName
-            guardarmodelo(modelo)
+        
+        If ListaOrdenes.Count = 1 Then
+            ' Flujo simple
+            SaveFileDialog1.Filter = "TextFile (*.mod)|*.mod"
+            SaveFileDialog1.FileName = Trim(ListaOrdenes(0).ClaveOrden.ToUpper)
+            If SaveFileDialog1.ShowDialog = DialogResult.OK Then
+                Dim modelo As String = SaveFileDialog1.FileName
+                Dim sw As New StreamWriter(modelo)
+                sw.Write(RichTextBox1.Text)
+                sw.Close()
+                
+                If CheckBox1.Checked = False Then
+                    If MsgBox("Quieres abrir el archivo guardado?", MsgBoxStyle.YesNo, "Modelo Guardado") = MsgBoxResult.Yes Then
+                        Try
+                            Process.Start("notepad.exe", modelo)
+                        Catch ex As Exception
+                            MsgBox(ex.Message.ToString())
+                        End Try
+                    End If
+                    copiar(modelo)
+                End If
+            End If
+        Else
+            ' Flujo multiple
+            If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
+                Dim folder As String = FolderBrowserDialog1.SelectedPath
+                For Each orden In ListaOrdenes
+                    Dim model As String = folder & "\" & Trim(orden.ClaveOrden.ToUpper()) & ".mod"
+                    Dim sw As New StreamWriter(model)
+                    sw.Write(GenerarXML(orden))
+                    sw.Close()
+                Next
+                MsgBox("Se guardaron " & ListaOrdenes.Count & " archivos .mod correctamente en: " & folder)
+            End If
         End If
     End Sub
     
