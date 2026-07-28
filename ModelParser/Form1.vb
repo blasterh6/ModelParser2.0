@@ -46,6 +46,7 @@ Public Class Form1
     'iniciar el modelo
     Private Sub iniciarmodelo()
         claveorden = Nothing
+        ListaOrdenes.Clear()
         RichTextBox1.Text = ""
         Label1.Text = "Orden"
         Label2.Text = "Proveedor"
@@ -368,6 +369,7 @@ Public Class Form1
                     End If
                     copiar(modelo)
                 End If
+                iniciarmodelo()
             End If
         Else
             ' Flujo multiple
@@ -380,6 +382,7 @@ Public Class Form1
                     sw.Close()
                 Next
                 MsgBox("Se guardaron " & ListaOrdenes.Count & " archivos .mod correctamente en: " & folder)
+                iniciarmodelo()
             End If
         End If
     End Sub
