@@ -1,10 +1,35 @@
-﻿Imports System.Collections.Specialized
+Imports System.Collections.Specialized
 Imports System.IO
 Imports System.Reflection
 
+Public Class PartidaOC
+    Public Cantidad As String
+    Public Producto As String
+    Public Descripcion As String
+    Public Costo As String
+    Public IvaText As String
+End Class
+
+Public Class OrdenCompra
+    Public ClaveOrden As String
+    Public Proveedor As String
+    Public Fecha As String
+    Public Moneda As String
+    Public Observaciones As String
+    Public Solicitante As String
+    Public EntregarEn As String
+    Public EsquemaBruto As String
+    
+    Public Partidas As New List(Of PartidaOC)
+End Class
+
 Public Class Form1
-    Dim datosorden As String
     Dim claveorden As String
+    Dim ListaOrdenes As New List(Of OrdenCompra)
+    
+    Friend WithEvents ComboBoxOrdenes As ComboBox
+    Friend WithEvents ButtonGuardarTodas As Button
+    
     'copiar al portapapeles
     Private Sub copiar(ByVal file As String)
         If System.IO.File.Exists(file) Then
@@ -20,223 +45,270 @@ Public Class Form1
 
     'iniciar el modelo
     Private Sub iniciarmodelo()
-        datosorden = Nothing
         claveorden = Nothing
         RichTextBox1.Text = ""
-        Label1.Text = "Orden" 'orden de compra
-        Label2.Text = "Proveedor" 'proveedor
-        Label3.Text = "Moneda" 'moneda
-        Label4.Text = "Fecha" 'fecha
-        Label5.Text = "Esquema" 'esquema impuestos
-        Label6.Text = "Almacen" 'almacen
-        Label7.Text = "Solicitante" 'solicitante
-        Label8.Text = "Observaciones" 'observaciones
+        Label1.Text = "Orden"
+        Label2.Text = "Proveedor"
+        Label3.Text = "Moneda"
+        Label4.Text = "Fecha"
+        Label5.Text = "Esquema"
+        Label6.Text = "Almacen"
+        Label7.Text = "Solicitante"
+        Label8.Text = "Observaciones"
         Label9.Text = "Archivo"
         Label10.Text = "Destino"
-        RichTextBox1.AppendText("<?xml version=""1.0"" standalone=""yes""?>  
-<DATAPACKET Version=""2.0"">
-    <METADATA>
-        <FIELDS>
-            <FIELD attrname=""CVE_CLPV"" fieldtype=""string"" WIDTH=""10""/>
-            <FIELD attrname=""NUM_ALMA"" fieldtype=""i4""/>
-            <FIELD attrname=""CVE_PEDI"" fieldtype=""string"" WIDTH=""20""/>
-            <FIELD attrname=""ESQUEMA"" fieldtype=""i4""/>
-            <FIELD attrname=""DES_TOT"" fieldtype=""r8""/>
-            <FIELD attrname=""DES_FIN"" fieldtype=""r8""/>
-            <FIELD attrname=""CVE_VEND"" fieldtype=""string"" WIDTH=""5""/>
-            <FIELD attrname=""COM_TOT"" fieldtype=""r8""/>
-            <FIELD attrname=""NUM_MONED"" fieldtype=""i4""/>
-            <FIELD attrname=""TIPCAMB"" fieldtype=""r8""/>
-            <FIELD attrname=""STR_OBS"" fieldtype=""string"" WIDTH=""255""/>
-            <FIELD attrname=""ENTREGA"" fieldtype=""string"" WIDTH=""25""/>
-            <FIELD attrname=""SU_REFER"" fieldtype=""string"" WIDTH=""20""/>
-            <FIELD attrname=""TOT_IND"" fieldtype=""r8""/>
-            <FIELD attrname=""MODULO"" fieldtype=""string"" WIDTH=""4""/>
-            <FIELD attrname=""CONDICION"" fieldtype=""string"" WIDTH=""25""/>
-            <FIELD attrname=""dtfield"" fieldtype=""nested"">
-                <FIELDS>
-                    <FIELD attrname=""CANT"" fieldtype=""r8""/>
-                    <FIELD attrname=""CVE_ART"" fieldtype=""string"" WIDTH=""20""/>
-                    <FIELD attrname=""DESC1"" fieldtype=""r8""/>
-                    <FIELD attrname=""DESC2"" fieldtype=""r8""/>
-                    <FIELD attrname=""DESC3"" fieldtype=""r8""/>
-                    <FIELD attrname=""IMPU1"" fieldtype=""r8""/>
-                    <FIELD attrname=""IMPU2"" fieldtype=""r8""/>
-                    <FIELD attrname=""IMPU3"" fieldtype=""r8""/>
-                    <FIELD attrname=""IMPU4"" fieldtype=""r8""/>
-                    <FIELD attrname=""COMI"" fieldtype=""r8""/>
-                    <FIELD attrname=""PREC"" fieldtype=""r8""/>
-                    <FIELD attrname=""NUM_ALM"" fieldtype=""i4""/>
-                    <FIELD attrname=""STR_OBS"" fieldtype=""string"" WIDTH=""255""/>
-                    <FIELD attrname=""REG_GPOPROD"" fieldtype=""i4""/>
-                    <FIELD attrname=""REG_KITPROD"" fieldtype=""i4""/>
-                    <FIELD attrname=""NUM_REG"" fieldtype=""i4""/>
-                    <FIELD attrname=""COSTO"" fieldtype=""r8""/>
-                    <FIELD attrname=""TIPO_PROD"" fieldtype=""string"" WIDTH=""1""/>
-                    <FIELD attrname=""TIPO_ELEM"" fieldtype=""string"" WIDTH=""1""/>
-                    <FIELD attrname=""MINDIRECTO"" fieldtype=""r8""/>
-                    <FIELD attrname=""TIP_CAM"" fieldtype=""r8""/>
-                    <FIELD attrname=""FACT_CONV"" fieldtype=""r8""/>
-                    <FIELD attrname=""UNI_VENTA"" fieldtype=""string"" WIDTH=""10""/>
-                    <FIELD attrname=""IMP1APLA"" fieldtype=""i4""/>
-                    <FIELD attrname=""IMP2APLA"" fieldtype=""i4""/>
-                    <FIELD attrname=""IMP3APLA"" fieldtype=""i4""/>
-                    <FIELD attrname=""IMP4APLA"" fieldtype=""i4""/>
-                    <FIELD attrname=""PREC_SINREDO"" fieldtype=""r8""/>
-                    <FIELD attrname=""COST_SINREDO"" fieldtype=""r8""/>
-                    <FIELD attrname=""LOTE"" fieldtype=""string"" WIDTH=""16""/>
-                    <FIELD attrname=""PEDIMENTO"" fieldtype=""string"" WIDTH=""16""/>
-                    <FIELD attrname=""FECHCADUC"" fieldtype=""dateTime""/>
-                    <FIELD attrname=""FECHADUANA"" fieldtype=""dateTime""/>
-                </FIELDS>
-                <PARAMS/>
-            </FIELD>
-        </FIELDS>
-        <PARAMS/>
-    </METADATA>
-    <ROWDATA>")
     End Sub
+    
+    Private Sub MostrarOrden(orden As OrdenCompra)
+        Label1.Text = "Orden: " & orden.ClaveOrden
+        Label2.Text = "Proveedor: " & orden.Proveedor
+        Label3.Text = "Moneda: " & orden.Moneda
+        Label4.Text = "Fecha: " & orden.Fecha
+        Label5.Text = "Esquema: " & orden.EsquemaBruto
+        Label6.Text = "Almacen: 1"
+        Label7.Text = "Solicitante: " & orden.Solicitante
+        Label8.Text = "Observaciones: " & orden.Observaciones
+        Label10.Text = "Guardar como: " & orden.ClaveOrden
+        claveorden = orden.ClaveOrden
+        
+        RichTextBox1.Text = GenerarXML(orden)
+    End Sub
+
+    Private Function GenerarXML(orden As OrdenCompra) As String
+        Dim proveedor As String = orden.Proveedor
+        Dim almacen As String = "1"
+        Dim esquema As String
+        If orden.EsquemaBruto = "16.0" Then
+            esquema = "9"
+        ElseIf orden.EsquemaBruto = "8.0" Then
+            esquema = "13"
+        ElseIf orden.EsquemaBruto = "-4.0" Then
+            esquema = "14"
+        Else
+            esquema = "12"
+        End If
+        Dim moneda As String
+        If orden.Moneda = "MXN" Then
+            moneda = "1"
+        Else
+            moneda = "2"
+        End If
+        Dim obs As String = orden.Observaciones & " SOLICITADO POR: " & orden.Solicitante
+
+        Dim xml As String = "<?xml version=""1.0"" standalone=""yes""?>  " & vbCrLf &
+"<DATAPACKET Version=""2.0"">" & vbCrLf &
+"    <METADATA>" & vbCrLf &
+"        <FIELDS>" & vbCrLf &
+"            <FIELD attrname=""CVE_CLPV"" fieldtype=""string"" WIDTH=""10""/>" & vbCrLf &
+"            <FIELD attrname=""NUM_ALMA"" fieldtype=""i4""/>" & vbCrLf &
+"            <FIELD attrname=""CVE_PEDI"" fieldtype=""string"" WIDTH=""20""/>" & vbCrLf &
+"            <FIELD attrname=""ESQUEMA"" fieldtype=""i4""/>" & vbCrLf &
+"            <FIELD attrname=""DES_TOT"" fieldtype=""r8""/>" & vbCrLf &
+"            <FIELD attrname=""DES_FIN"" fieldtype=""r8""/>" & vbCrLf &
+"            <FIELD attrname=""CVE_VEND"" fieldtype=""string"" WIDTH=""5""/>" & vbCrLf &
+"            <FIELD attrname=""COM_TOT"" fieldtype=""r8""/>" & vbCrLf &
+"            <FIELD attrname=""NUM_MONED"" fieldtype=""i4""/>" & vbCrLf &
+"            <FIELD attrname=""TIPCAMB"" fieldtype=""r8""/>" & vbCrLf &
+"            <FIELD attrname=""STR_OBS"" fieldtype=""string"" WIDTH=""255""/>" & vbCrLf &
+"            <FIELD attrname=""ENTREGA"" fieldtype=""string"" WIDTH=""25""/>" & vbCrLf &
+"            <FIELD attrname=""SU_REFER"" fieldtype=""string"" WIDTH=""20""/>" & vbCrLf &
+"            <FIELD attrname=""TOT_IND"" fieldtype=""r8""/>" & vbCrLf &
+"            <FIELD attrname=""MODULO"" fieldtype=""string"" WIDTH=""4""/>" & vbCrLf &
+"            <FIELD attrname=""CONDICION"" fieldtype=""string"" WIDTH=""25""/>" & vbCrLf &
+"            <FIELD attrname=""dtfield"" fieldtype=""nested"">" & vbCrLf &
+"                <FIELDS>" & vbCrLf &
+"                    <FIELD attrname=""CANT"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""CVE_ART"" fieldtype=""string"" WIDTH=""20""/>" & vbCrLf &
+"                    <FIELD attrname=""DESC1"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""DESC2"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""DESC3"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""IMPU1"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""IMPU2"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""IMPU3"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""IMPU4"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""COMI"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""PREC"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""NUM_ALM"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""STR_OBS"" fieldtype=""string"" WIDTH=""255""/>" & vbCrLf &
+"                    <FIELD attrname=""REG_GPOPROD"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""REG_KITPROD"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""NUM_REG"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""COSTO"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""TIPO_PROD"" fieldtype=""string"" WIDTH=""1""/>" & vbCrLf &
+"                    <FIELD attrname=""TIPO_ELEM"" fieldtype=""string"" WIDTH=""1""/>" & vbCrLf &
+"                    <FIELD attrname=""MINDIRECTO"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""TIP_CAM"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""FACT_CONV"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""UNI_VENTA"" fieldtype=""string"" WIDTH=""10""/>" & vbCrLf &
+"                    <FIELD attrname=""IMP1APLA"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""IMP2APLA"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""IMP3APLA"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""IMP4APLA"" fieldtype=""i4""/>" & vbCrLf &
+"                    <FIELD attrname=""PREC_SINREDO"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""COST_SINREDO"" fieldtype=""r8""/>" & vbCrLf &
+"                    <FIELD attrname=""LOTE"" fieldtype=""string"" WIDTH=""16""/>" & vbCrLf &
+"                    <FIELD attrname=""PEDIMENTO"" fieldtype=""string"" WIDTH=""16""/>" & vbCrLf &
+"                    <FIELD attrname=""FECHCADUC"" fieldtype=""dateTime""/>" & vbCrLf &
+"                    <FIELD attrname=""FECHADUANA"" fieldtype=""dateTime""/>" & vbCrLf &
+"                </FIELDS>" & vbCrLf &
+"                <PARAMS/>" & vbCrLf &
+"            </FIELD>" & vbCrLf &
+"        </FIELDS>" & vbCrLf &
+"        <PARAMS/>" & vbCrLf &
+"    </METADATA>" & vbCrLf &
+"    <ROWDATA>" & vbCrLf &
+"<ROW " & vbCrLf &
+"    CVE_CLPV=""" & proveedor & """ " & vbCrLf &
+"    NUM_ALMA=""" & almacen & """ " & vbCrLf &
+"    ESQUEMA=""" & esquema & """ " & vbCrLf &
+"    DES_TOT=""0"" " & vbCrLf &
+"    DES_FIN=""0"" " & vbCrLf &
+"    NUM_MONED=""" & moneda & """ " & vbCrLf &
+"    TIPCAMB=""1"" " & vbCrLf &
+"    STR_OBS=""" & obs & """ " & vbCrLf &
+"    ENTREGA=""" & orden.EntregarEn & """ " & vbCrLf &
+"    SU_REFER="""" " & vbCrLf &
+"    TOT_IND=""0"" " & vbCrLf &
+"    MODULO=""COMP"">" & vbCrLf &
+"    <dtfield>" & vbCrLf
+
+        For Each p In orden.Partidas
+            Dim cant As String = p.Cantidad
+            Dim prod As String = p.Producto
+            Dim iva As String = "0"
+            If p.IvaText.Contains(".") Then
+                Try
+                    iva = CInt(Math.Round(Convert.ToDouble(p.IvaText))).ToString()
+                Catch ex As Exception
+                    iva = "0"
+                End Try
+            End If
+            Dim desc As String = p.Descripcion
+            Dim costo As String = p.Costo
+            
+            xml &= "<ROWdtfield " & vbCrLf &
+"    CANT=""" & cant & """ " & vbCrLf &
+"    CVE_ART=""" & prod & """ " & vbCrLf &
+"    DESC1=""0"" " & vbCrLf &
+"    IMPU1=""0"" " & vbCrLf &
+"    IMPU2=""0"" " & vbCrLf &
+"    IMPU3=""0"" " & vbCrLf &
+"    IMPU4=""" & iva & """ " & vbCrLf &
+"    PREC=""0"" " & vbCrLf &
+"    NUM_ALM=""" & almacen & """ " & vbCrLf &
+"    STR_OBS=""" & desc & """ " & vbCrLf &
+"    REG_GPOPROD=""0"" " & vbCrLf &
+"    COSTO=""" & costo & """ " & vbCrLf &
+"    TIPO_PROD=""P"" " & vbCrLf &
+"    TIPO_ELEM=""N"" " & vbCrLf &
+"    MINDIRECTO=""0"" " & vbCrLf &
+"    TIP_CAM=""1"" " & vbCrLf &
+"    FACT_CONV=""1"" " & vbCrLf &
+"    UNI_VENTA=""pz"" " & vbCrLf &
+"    IMP1APLA=""6"" " & vbCrLf &
+"    IMP2APLA=""6"" " & vbCrLf &
+"    IMP3APLA=""6"" " & vbCrLf &
+"    IMP4APLA=""1"" " & vbCrLf &
+"    PREC_SINREDO=""0"" " & vbCrLf &
+"    COST_SINREDO=""" & costo & """/>" & vbCrLf
+        Next
+        
+        xml &= " </dtfield>" & vbCrLf &
+"        </ROW>" & vbCrLf &
+"    </ROWDATA>" & vbCrLf &
+"</DATAPACKET>"
+
+        Return xml
+    End Function
+
     'cargar archivo
     Private Sub cargararchivo(ByVal archivo As String)
-        Dim file As String = archivo
-        Using MyReader As New Microsoft.VisualBasic.
-                      FileIO.TextFieldParser(
-                        file)
+        ListaOrdenes.Clear()
+        ComboBoxOrdenes.Items.Clear()
+        
+        Using MyReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(archivo)
             MyReader.TextFieldType = FileIO.FieldType.Delimited
             MyReader.SetDelimiters(",")
             Dim currentRow As String()
             Dim cline As Integer = 1
+            Dim ordenActual As OrdenCompra = Nothing
+            
             While Not MyReader.EndOfData
                 Try
                     currentRow = MyReader.ReadFields()
-                    'Dim currentField As String 'para debuguear campo por campo
-
+                    
                     If Not currentRow.Length = 12 Then
-                        MsgBox("Formato de importacion incorrecto")
-                        iniciarmodelo()
-                        Exit Sub
+                        MsgBox("Formato de importacion incorrecto en linea " & cline)
+                        Continue While
                     End If
-
+                    
                     If cline > 1 Then '1 son los headers, a partir de 2 ya son datos
-                        'agregar directamente segun el indice
-
-                        Label1.Text = Label1.Text + ": " + currentRow(0).ToString() 'orden de compra
-
-
-                        Label2.Text = Label2.Text + ": " + currentRow(1).ToString() 'proveedor
-                        Label3.Text = Label3.Text + ": " + currentRow(3).ToString() 'moneda
-                        Label4.Text = Label4.Text + ": " + currentRow(2).ToString() 'fecha
-                        Label5.Text = Label5.Text + ": " + currentRow(9).ToString() 'esquema impuestos
-                        Label6.Text = Label6.Text + ": 1" 'almacen
-                        Label7.Text = Label7.Text + ": " + currentRow(5).ToString() 'solicitante
-                        Label8.Text = Label8.Text + ": " + currentRow(4).ToString() 'observaciones
-
-
-                        Dim proveedor As String = currentRow(1).ToString() 'proveedor
-                        Dim almacen As String = "1"
-                        Dim esquema As String
-                        If currentRow(9).ToString() = "16.0" Then
-                            esquema = "9"
-                        ElseIf currentRow(9).ToString() = "8.0" Then
-                            esquema = "13"
-                        ElseIf currentRow(9).ToString() = "-4.0" Then
-                            esquema = "14"
-                        Else
-                            esquema = "12"
+                        Dim refPedido As String = currentRow(0).ToString().Trim()
+                        If Not String.IsNullOrEmpty(refPedido) Then
+                            ordenActual = New OrdenCompra()
+                            ordenActual.ClaveOrden = refPedido
+                            ordenActual.Proveedor = currentRow(1).ToString()
+                            ordenActual.Fecha = currentRow(2).ToString()
+                            ordenActual.Moneda = currentRow(3).ToString()
+                            ordenActual.Observaciones = currentRow(4).ToString()
+                            ordenActual.Solicitante = currentRow(5).ToString()
+                            ordenActual.EntregarEn = currentRow(11).ToString()
+                            ordenActual.EsquemaBruto = currentRow(9).ToString()
+                            
+                            ListaOrdenes.Add(ordenActual)
                         End If
-                        Dim moneda As String
-                        If currentRow(3).ToString() = "MXN" Then
-                            moneda = "1"
-                        Else
-                            moneda = "2"
+                        
+                        If ordenActual IsNot Nothing Then
+                            Dim partida As New PartidaOC()
+                            partida.Costo = currentRow(6).ToString()
+                            partida.Producto = currentRow(7).ToString()
+                            partida.Cantidad = currentRow(8).ToString()
+                            partida.IvaText = currentRow(9).ToString()
+                            partida.Descripcion = currentRow(10).ToString()
+                            
+                            ordenActual.Partidas.Add(partida)
                         End If
-
-                        Dim observaciones As String = currentRow(4).ToString() & " SOLICITADO POR: " & currentRow(5).ToString() 'observaciones
-                        Dim entregaren As String = currentRow(11).ToString() 'entregar en
-
-                        If cline = 2 Then ' aqui nomas se llena una vez la informacion de la orden
-                            claveorden = currentRow(0).ToString()
-                            Label10.Text = "Guardar como: " & claveorden
-                            datosorden = "<ROW 
-                                            CVE_CLPV=""" & proveedor & """ 
-                                            NUM_ALMA=""" & almacen & """ 
-                                            ESQUEMA=""" & esquema & """ 
-                                            DES_TOT=""0"" 
-                                            DES_FIN=""0"" 
-                                            NUM_MONED=""" & moneda & """ 
-                                            TIPCAMB=""1"" 
-                                            STR_OBS=""" & observaciones & """ 
-                                            ENTREGA=""" & entregaren & """ 
-                                            SU_REFER="""" 
-                                            TOT_IND=""0"" 
-                                            MODULO=""COMP"">
-                                            <dtfield>"
-                            RichTextBox1.AppendText(datosorden)
-                        End If
-
-                        'aqui se tienen que llenar las partidas
-                        Dim cant As Integer = currentRow(8).ToString()
-                        Dim prod As String = currentRow(7).ToString()
-                        Dim iva As Integer = 0
-                        If currentRow(9).ToString().Contains(".") Then
-                            iva = currentRow(9)
-                        End If
-                        Dim ret As Integer = 0 'currentRow(9).ToString()
-                        Dim desc As String = currentRow(10).ToString()
-                        Dim costo As String = currentRow(6).ToString()
-
-
-
-
-                        Dim lineaoc As String = "<ROWdtfield 
-                    CANT=""" & cant & """ 
-                    CVE_ART=""" & prod & """ 
-                    DESC1=""0"" 
-                    IMPU1=""0"" 
-                    IMPU2=""0"" 
-                    IMPU3=""" & ret & """ 
-                    IMPU4=""" & iva & """ 
-                    PREC=""0"" 
-                    NUM_ALM=""" & almacen & """ 
-                    STR_OBS=""" & desc & """ 
-                    REG_GPOPROD=""0"" 
-                    COSTO=""" & costo & """ 
-                    TIPO_PROD=""P"" 
-                    TIPO_ELEM=""N"" 
-                    MINDIRECTO=""0"" 
-                    TIP_CAM=""1"" 
-                    FACT_CONV=""1"" 
-                    UNI_VENTA=""pz"" 
-                    IMP1APLA=""6"" 
-                    IMP2APLA=""6"" 
-                    IMP3APLA=""6"" 
-                    IMP4APLA=""1"" 
-                    PREC_SINREDO=""0"" 
-                    COST_SINREDO=""" & costo & """/>"
-
-                        RichTextBox1.AppendText(lineaoc)
-
                     End If
-
-                    'For Each currentField In currentRow
-                    ' MsgBox(currentField & "index: " & Array.IndexOf(currentRow, currentField))
-                    ' Next
-
-                Catch ex As Microsoft.VisualBasic.
-                            FileIO.MalformedLineException
-                    MsgBox("Linea " & ex.Message &
-                    "no valida, se saltara.")
+                Catch ex As Microsoft.VisualBasic.FileIO.MalformedLineException
+                    MsgBox("Linea " & ex.Message & " no valida, se saltara.")
                 End Try
                 cline = cline + 1
             End While
         End Using
-        'cerrar el modelo
-        Dim cierre As String = " </dtfield>
-        </ROW>
-    </ROWDATA>
-</DATAPACKET>"
-        RichTextBox1.AppendText(cierre)
+        
+        If ListaOrdenes.Count > 0 Then
+            For Each o In ListaOrdenes
+                ComboBoxOrdenes.Items.Add(o.ClaveOrden)
+            Next
+            ComboBoxOrdenes.SelectedIndex = 0
+            MsgBox("Se encontraron " & ListaOrdenes.Count & " órdenes en el archivo.")
+        End If
     End Sub
+
+    Private Sub ComboBoxOrdenes_SelectedIndexChanged(sender As Object, e As EventArgs)
+        If ComboBoxOrdenes.SelectedIndex >= 0 Then
+            MostrarOrden(ListaOrdenes(ComboBoxOrdenes.SelectedIndex))
+        End If
+    End Sub
+    
+    Private Sub ButtonGuardarTodas_Click(sender As Object, e As EventArgs)
+        If ListaOrdenes.Count = 0 Then
+            MsgBox("No hay órdenes cargadas.")
+            Exit Sub
+        End If
+        
+        If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
+            Dim folder As String = FolderBrowserDialog1.SelectedPath
+            For Each orden In ListaOrdenes
+                Dim model As String = folder & "\" & Trim(orden.ClaveOrden.ToUpper()) & ".mod"
+                Dim sw As New StreamWriter(model)
+                sw.Write(GenerarXML(orden))
+                sw.Close()
+            Next
+            MsgBox("Se guardaron " & ListaOrdenes.Count & " archivos .mod correctamente en: " & folder)
+        End If
+    End Sub
+
     'boton cargar informacion
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim file As String
@@ -248,17 +320,26 @@ Public Class Form1
             Exit Sub
         End If
         If Not IsNothing(file) Then
-            MsgBox(file)
             cargararchivo(file)
         End If
-
-
-
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ComboBoxOrdenes = New ComboBox()
+        ComboBoxOrdenes.DropDownStyle = ComboBoxStyle.DropDownList
+        ComboBoxOrdenes.Dock = DockStyle.Top
+        GroupBox1.Controls.Add(ComboBoxOrdenes)
+        AddHandler ComboBoxOrdenes.SelectedIndexChanged, AddressOf ComboBoxOrdenes_SelectedIndexChanged
+        
+        ButtonGuardarTodas = New Button()
+        ButtonGuardarTodas.Text = "Guardar Todas"
+        ButtonGuardarTodas.Dock = DockStyle.Top
+        GroupBox1.Controls.Add(ButtonGuardarTodas)
+        AddHandler ButtonGuardarTodas.Click, AddressOf ButtonGuardarTodas_Click
+
         iniciarmodelo()
     End Sub
+    
     'guardar modelo
     Private Sub guardarmodelo(ByVal modelo As String)
         Dim sw As New StreamWriter(modelo)
@@ -274,13 +355,8 @@ Public Class Form1
             End If
             copiar(modelo)
         End If
-        iniciarmodelo()
     End Sub
-    ''' <summary>
-    ''' 
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         SaveFileDialog1.Filter = "TextFile (*.mod)|*.mod"
         If Not claveorden Is Nothing Then
@@ -291,21 +367,23 @@ Public Class Form1
             guardarmodelo(modelo)
         End If
     End Sub
+    
     Private Sub procesarlote(ByVal folder As String)
         For Each item In ListBox1.Items()
-            'MsgBox(item)
             cargararchivo(item)
-            If Not claveorden Is Nothing Then
-
-                Dim model As String = folder & "\" & Trim(claveorden.ToUpper()) & ".mod"
-                'MsgBox(model)
-                guardarmodelo(model)
+            If ListaOrdenes.Count > 0 Then
+                For Each orden In ListaOrdenes
+                    Dim model As String = folder & "\" & Trim(orden.ClaveOrden.ToUpper()) & ".mod"
+                    Dim sw As New StreamWriter(model)
+                    sw.Write(GenerarXML(orden))
+                    sw.Close()
+                Next
             End If
-            'guardarmodelo(item) 'falta parsear el nom,bre con el que se guardara el archivo mod
         Next
         MsgBox("Se proceso el lote")
         iniciarmodelo()
     End Sub
+    
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         If FolderBrowserDialog1.ShowDialog = DialogResult.OK Then
             ListBox1.Items.Clear()
@@ -314,7 +392,6 @@ Public Class Form1
             For Each file In files
                 ListBox1.Items.Add(file)
             Next
-            'empezar el cagadero
             procesarlote(f)
         End If
     End Sub
