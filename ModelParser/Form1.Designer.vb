@@ -92,7 +92,7 @@ Partial Class Form1
         GroupBox1.Size = New Size(200, 490)
         GroupBox1.TabIndex = 0
         GroupBox1.TabStop = False
-        GroupBox1.Text = "Info Panel"
+        GroupBox1.Text = "ℹ️ Info Panel"
         ' 
         ' CheckBox1
         ' 
@@ -103,7 +103,7 @@ Partial Class Form1
         CheckBox1.Name = "CheckBox1"
         CheckBox1.Size = New Size(114, 19)
         CheckBox1.TabIndex = 9
-        CheckBox1.Text = "Modo Silencioso"
+        CheckBox1.Text = "🤫 Modo Silencioso"
         CheckBox1.UseVisualStyleBackColor = True
         ' 
         ' GroupBox4
@@ -117,7 +117,7 @@ Partial Class Form1
         GroupBox4.Size = New Size(194, 239)
         GroupBox4.TabIndex = 8
         GroupBox4.TabStop = False
-        GroupBox4.Text = "Archivos en Serie"
+        GroupBox4.Text = "🔄 Archivos en Serie"
         ' 
         ' ListBox1
         ' 
@@ -145,7 +145,7 @@ Partial Class Form1
         Button3.Name = "Button3"
         Button3.Size = New Size(188, 30)
         Button3.TabIndex = 0
-        Button3.Text = "Seleccionar Carpeta"
+        Button3.Text = "📁 Seleccionar Carpeta"
         Button3.UseVisualStyleBackColor = True
         ' 
         ' Label5
@@ -230,7 +230,7 @@ Partial Class Form1
         GroupBox2.Size = New Size(677, 80)
         GroupBox2.TabIndex = 1
         GroupBox2.TabStop = False
-        GroupBox2.Text = "Origen - Destino"
+        GroupBox2.Text = "📍 Origen - Destino"
         ' 
         ' Label10
         ' 
@@ -271,7 +271,7 @@ Partial Class Form1
         Button1.Name = "Button1"
         Button1.Size = New Size(194, 32)
         Button1.TabIndex = 0
-        Button1.Text = "Cargar Archivo"
+        Button1.Text = "📂 Cargar Archivo"
         Button1.UseVisualStyleBackColor = True
         ' 
         ' Button2
@@ -281,7 +281,7 @@ Partial Class Form1
         Button2.Name = "Button2"
         Button2.Size = New Size(194, 32)
         Button2.TabIndex = 1
-        Button2.Text = "Guardar Modelo"
+        Button2.Text = "💾 Guardar Modelo"
         Button2.UseVisualStyleBackColor = True
         ' 
         ' GroupBox3
@@ -293,7 +293,7 @@ Partial Class Form1
         GroupBox3.Size = New Size(677, 490)
         GroupBox3.TabIndex = 3
         GroupBox3.TabStop = False
-        GroupBox3.Text = "Previa"
+        GroupBox3.Text = "👁️ Previa"
         ' 
         ' RichTextBox1
         ' 

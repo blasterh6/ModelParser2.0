@@ -68,7 +68,7 @@ Public Class Form1
 
         ' 1. Crear y configurar la etiqueta (Label) del menú desplegable
         LabelCombo = New Label()
-        LabelCombo.Text = "Seleccionar Previa:"
+        LabelCombo.Text = "🔍 Seleccionar Previa:"
         LabelCombo.Location = New Point(400, 29)
         LabelCombo.AutoSize = True
         LabelCombo.Visible = False
@@ -101,17 +101,17 @@ Public Class Form1
         RichTextBox1.Text = ""
         
         ' Restablecer las etiquetas (Labels) con sus valores por defecto
-        Label1.Text = "Orden"
-        Label2.Text = "Proveedor"
-        Label3.Text = "Moneda"
-        Label4.Text = "Fecha"
-        Label5.Text = "Esquema"
-        Label6.Text = "Almacen"
-        Label7.Text = "Solicitante"
-        Label8.Text = "Observaciones"
-        Label9.Text = "Archivo"
-        Label10.Text = "Destino"
-        Button2.Text = "Guardar Modelo"
+        Label1.Text = "🏷️ Orden"
+        Label2.Text = "🏢 Proveedor"
+        Label3.Text = "💲 Moneda"
+        Label4.Text = "📅 Fecha"
+        Label5.Text = "📊 Esquema"
+        Label6.Text = "🏭 Almacen"
+        Label7.Text = "👤 Solicitante"
+        Label8.Text = "📝 Observaciones"
+        Label9.Text = "📄 Archivo"
+        Label10.Text = "📁 Destino"
+        Button2.Text = "💾 Guardar Modelo"
         
         ' Ocultar el selector de órdenes dinámico si ya fue inicializado
         If ComboBoxOrdenes IsNot Nothing Then
@@ -127,15 +127,15 @@ Public Class Form1
     ' <param name="orden">La orden de compra a mostrar en pantalla</param>
     Private Sub MostrarOrden(orden As OrdenCompra)
         ' Actualizar las etiquetas con los datos de la orden seleccionada
-        Label1.Text = "Orden: " & orden.ClaveOrden
-        Label2.Text = "Proveedor: " & orden.Proveedor
-        Label3.Text = "Moneda: " & orden.Moneda
-        Label4.Text = "Fecha: " & orden.Fecha
-        Label5.Text = "Esquema: " & orden.EsquemaBruto
-        Label6.Text = "Almacen: 1"
-        Label7.Text = "Solicitante: " & orden.Solicitante
-        Label8.Text = "Observaciones: " & orden.Observaciones
-        Label10.Text = "Destino: " & orden.ClaveOrden & ".mod"
+        Label1.Text = "🏷️ Orden: " & orden.ClaveOrden
+        Label2.Text = "🏢 Proveedor: " & orden.Proveedor
+        Label3.Text = "💲 Moneda: " & orden.Moneda
+        Label4.Text = "📅 Fecha: " & orden.Fecha
+        Label5.Text = "📊 Esquema: " & orden.EsquemaBruto
+        Label6.Text = "🏭 Almacen: 1"
+        Label7.Text = "👤 Solicitante: " & orden.Solicitante
+        Label8.Text = "📝 Observaciones: " & orden.Observaciones
+        Label10.Text = "📁 Destino: " & orden.ClaveOrden & ".mod"
         
         ' Guardar la clave en la variable global
         claveorden = orden.ClaveOrden
@@ -241,9 +241,9 @@ Public Class Form1
             
             ' Modificar el texto del botón Guardar dependiendo de si es 1 orden o varias
             If ListaOrdenes.Count = 1 Then
-                Button2.Text = "Guardar Orden"
+                Button2.Text = "💾 Guardar Orden"
             Else
-                Button2.Text = "Guardar Todas (" & ListaOrdenes.Count & ")"
+                Button2.Text = "💾 Guardar Todas (" & ListaOrdenes.Count & ")"
             End If
         End If
     End Sub
@@ -452,7 +452,7 @@ Public Class Form1
             
             ' Limpiar interfaz antes de cargar algo nuevo
             iniciarmodelo()
-            Label9.Text = "Archivo: " & file
+            Label9.Text = "📄 Archivo: " & file
         Else
             Exit Sub
         End If
