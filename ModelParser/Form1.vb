@@ -57,10 +57,19 @@ Public Class Form1
     ' Aquí se inicializan los componentes visuales que no estaban en el diseñador originalmente.
     ' </summary>
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' 0. Ajustar las etiquetas existentes para que se trunquen si el texto es muy largo (AutoEllipsis)
+        Label9.AutoSize = False
+        Label9.Width = 360
+        Label9.AutoEllipsis = True
+        
+        Label10.AutoSize = False
+        Label10.Width = 360
+        Label10.AutoEllipsis = True
+
         ' 1. Crear y configurar la etiqueta (Label) del menú desplegable
         LabelCombo = New Label()
         LabelCombo.Text = "Seleccionar Previa:"
-        LabelCombo.Location = New Point(320, 30)
+        LabelCombo.Location = New Point(400, 29)
         LabelCombo.AutoSize = True
         LabelCombo.Visible = False
         GroupBox2.Controls.Add(LabelCombo)
@@ -68,8 +77,8 @@ Public Class Form1
         ' 2. Crear y configurar el menú desplegable (ComboBox) de órdenes
         ComboBoxOrdenes = New ComboBox()
         ComboBoxOrdenes.DropDownStyle = ComboBoxStyle.DropDownList
-        ComboBoxOrdenes.Location = New Point(440, 27)
-        ComboBoxOrdenes.Size = New Size(200, 23)
+        ComboBoxOrdenes.Location = New Point(515, 26)
+        ComboBoxOrdenes.Size = New Size(150, 23)
         ComboBoxOrdenes.Visible = False
         GroupBox2.Controls.Add(ComboBoxOrdenes)
         
